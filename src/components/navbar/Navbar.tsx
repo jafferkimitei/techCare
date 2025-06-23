@@ -1,43 +1,116 @@
-
 "use client";
-import { FaCog, FaEllipsisV } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
+import clsx from "clsx";
+
+const navItems = [
+  { label: "Overview", href: "/overview", icon: "/icons/home_FILL0_wght300_GRAD0_opsz24.svg" },
+  { label: "Patients", href: "/patients", icon: "/icons/group_FILL0_wght300_GRAD0_opsz24.svg" },
+  { label: "Schedule", href: "/schedule", icon: "/icons/calendar_today_FILL0_wght300_GRAD0_opsz24.svg" },
+  { label: "Message", href: "/messages", icon: "/icons/chat_bubble_FILL0_wght300_GRAD0_opsz24.svg" },
+  { label: "Transactions", href: "/transactions", icon: "/icons/credit_card_FILL0_wght300_GRAD0_opsz24.svg" },
+];
 
 const Navbar = () => {
+  const pathname = usePathname();
+
   return (
-    <header className="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
-      <div className="flex items-center gap-8">
-        <div className="text-xl font-bold">MediTrack</div>
-        <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-700">
-          {["Overview", "Patients", "Schedule", "Message", "Transactions"].map((item) => (
-            <a href="#" key={item} className="hover:text-blue-600 transition">
-              {item}
-            </a>
-          ))}
-        </nav>
+    <header
+      className="
+        mx-auto mt-[18px] ml-[18px] px-6 py-4
+        w-[1564px] h-[72px]
+        bg-white shadow-sm
+        flex items-center justify-between
+        rounded-[70px]
+        relative z-10
+      "
+    >
+      {/* Logo Section */}
+      <div className="flex items-center justify-start flex-1 min-w-0">
+        <div className="w-[211px] h-[48px] relative">
+          <Image
+            src="/TestLogo.svg"
+            alt="MediTrack Logo"
+            layout="fill"
+            objectFit="contain"
+            priority
+          />
+        </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* Navigation */}
+      <nav className="hidden md:flex justify-center flex-1 min-w-0 gap-4 text-sm font-medium text-[#072635]">
+        {navItems.map(({ label, href, icon }) => {
+          const isActive = pathname === href;
+          return (
+            <a
+              key={label}
+              href={href}
+              className={clsx(
+                "flex items-center gap-1 px-4 py-2 text-[14px] font-bold font-[Manrope] transition-colors duration-200",
+                isActive
+                  ? "bg-[#01F0D0] text-[#072635] rounded-[41px]"
+                  : "text-[#072635] hover:text-blue-600"
+              )}
+            >
+              <Image
+                src={icon}
+                alt={`${label} icon`}
+                width={16}
+                height={17}
+                className="object-contain"
+              />
+              <span>{label}</span>
+            </a>
+          );
+        })}
+      </nav>
+
+      {/* User + Actions */}
+      <div className="flex items-center justify-end flex-1 min-w-0 gap-4">
+        {/* User Info */}
         <div className="flex items-center gap-3">
           <Image
-            src="/assets/images/user-avatar.jpg"
-            alt="User"
+            src="/patients/dr_jose.png"
+            alt="dr. jose"
             width={36}
             height={36}
             className="rounded-full object-cover"
           />
           <div className="hidden md:block text-sm">
-            <p className="font-medium">Dr. Alexa Grey</p>
-            <p className="text-xs text-gray-500">Cardiologist</p>
+            <p className="font-medium">Dr. Jose Simmons</p>
+            <p className="text-xs text-gray-500">General Practictioner</p>
           </div>
         </div>
 
-        {/* Icons */}
-        <button className="p-2 hover:bg-gray-100 rounded-full" title="Settings">
-          <FaCog size={18} />
+        {/* Settings */}
+        <button
+          className="p-2 hover:bg-gray-100 rounded-full transition"
+          title="Settings"
+          aria-label="Settings"
+        >
+          <Image
+            src="/icons/settings_FILL0_wght300_GRAD0_opsz24.svg"
+            alt="Settings icon"
+            width={19}
+            height={20}
+            className="object-contain"
+          />
         </button>
-        <button className="p-2 hover:bg-gray-100 rounded-full" title="More options">
-          <FaEllipsisV size={18} />
+
+        {/* More Options */}
+        <button
+          className="p-2 hover:bg-gray-100 rounded-full transition"
+          title="More options"
+          aria-haspopup="true"
+        >
+          <Image
+            src="/icons/more_vert_FILL0_wght300_GRAD0_opsz24.svg"
+            alt="More options icon"
+            width={4}
+            height={18}
+            className="object-contain"
+          />
         </button>
       </div>
     </header>
