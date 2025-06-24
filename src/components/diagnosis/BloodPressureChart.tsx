@@ -1,6 +1,4 @@
-
 'use client';
-
 import {
   Chart as ChartJS,
   LineElement,
@@ -21,7 +19,6 @@ ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Legend, 
 const BloodPressureChart = () => {
   const { selectedPatient } = usePatientStore();
   const [filter, setFilter] = useState<'1m' | '6m' | '1y'>('6m');
-
 
   const abbreviateMonth = (monthName: string) => {
     const monthAbbreviations: { [key: string]: string } = {
@@ -71,7 +68,7 @@ const BloodPressureChart = () => {
       {
         label: 'Systolic',
         data: systolicData,
-        borderColor: '#EC4899',
+        borderColor: '#C26EB4',
         backgroundColor: 'rgba(236, 72, 153, 0.2)',
         tension: 0.4,
         fill: true,
@@ -79,7 +76,7 @@ const BloodPressureChart = () => {
       {
         label: 'Diastolic',
         data: diastolicData,
-        borderColor: '#3B82F6',
+        borderColor: '#7E6CAB',
         backgroundColor: 'rgba(59, 130, 246, 0.2)',
         tension: 0.4,
         fill: true,
@@ -104,18 +101,23 @@ const BloodPressureChart = () => {
           }
         },
       },
+      x: {
+        ticks: {
+          maxTicksLimit: window.innerWidth < 640 ? 3 : 6,
+        }
+      }
     },
   };
 
   return (
     <div className="w-full h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">Blood Pressure</h2>
-        <div className="relative text-sm text-gray-500 cursor-pointer">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-800">Blood Pressure</h2>
+        <div className="relative text-xs sm:text-sm text-gray-500 cursor-pointer">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as '1m' | '6m' | '1y')}
-            className="bg-transparent appearance-none pr-6"
+            className="bg-transparent appearance-none pr-6 text-xs sm:text-sm"
           >
             <option value="1m">Last 1 month</option>
             <option value="6m">Last 6 months</option>
@@ -133,46 +135,49 @@ const BloodPressureChart = () => {
         </div>
       </div>
 
-      <div className="flex w-full h-full gap-4">
-        <div className="flex-1 min-w-0 h-full">
+      <div className="flex flex-col lg:flex-row w-full h-full gap-4">
+        <div className="flex-1 min-w-0 h-full min-h-[200px]">
           <Line data={data} options={options} />
         </div>
-        <div className="w-52 flex flex-col text-sm text-gray-700 pl-4">
-          <div className="border-b border-gray-200 pb-3 mb-3">
+        
+       
+        <div className="w-full lg:w-52 flex flex-row lg:flex-col gap-4 lg:gap-0 text-xs sm:text-sm text-gray-700 lg:pl-4">
+          <div className="flex-1 lg:flex-none border-b border-gray-200 pb-2 lg:pb-3 mb-2 lg:mb-3">
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-3 h-3 rounded-full bg-pink-400" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#C26EB4]" />
               <span className="font-semibold">Systolic</span>
             </div>
-            <div className="ml-5 text-gray-600">
-              <div className="text-xl font-bold text-pink-500">{maxSystolic}</div>
+            <div className="ml-4 lg:ml-5 text-gray-600">
+              <div className="text-lg sm:text-xl font-bold text-[#072635]">{maxSystolic}</div>
               <div className="flex items-center gap-1">
                 <Image
                   src="/icons/ArrowUp.svg"
                   alt="Up Arrow"
-                  width={14}
-                  height={14}
-                  className="text-pink-400"
+                  width={12}
+                  height={12}
+                  className="sm:w-[14px] sm:h-[14px] text-[#072635]"
                 />
-                <span className="text-xs text-pink-400">Higher than average</span>
+                <span className="text-xs text-[#072635]">Higher than average</span>
               </div>
             </div>
           </div>
-          <div>
+          
+          <div className="flex-1 lg:flex-none">
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-3 h-3 rounded-full bg-blue-400" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#7E6CAB]" />
               <span className="font-semibold">Diastolic</span>
             </div>
-            <div className="ml-5 text-gray-600">
-              <div className="text-xl font-bold text-blue-500">{maxDiastolic}</div>
+            <div className="ml-4 lg:ml-5 text-gray-600">
+              <div className="text-lg sm:text-xl font-bold text-[#072635]">{maxDiastolic}</div>
               <div className="flex items-center gap-1">
                 <Image
                   src="/icons/ArrowDown.svg"
                   alt="Down Arrow"
-                  width={14}
-                  height={14}
-                  className="text-blue-400"
+                  width={12}
+                  height={12}
+                  className="sm:w-[14px] sm:h-[14px] text-[#072635]"
                 />
-                <span className="text-xs text-blue-400">Lower than average</span>
+                <span className="text-xs font-family-Manrope text-[#072635]">Lower than average</span>
               </div>
             </div>
           </div>

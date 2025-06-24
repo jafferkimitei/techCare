@@ -52,7 +52,7 @@ export const usePatientStore = create<PatientStore>((set) => ({
       const patients = Array.isArray(data) ? data : [data];
       set({
         patients,
-        selectedPatient: patients.length > 0 ? patients[0] : null,
+        selectedPatient: patients.length > 0 ? patients[3] : null,
       });
     } catch (error) {
       console.error('🛑 Failed to fetch patients:', error);
