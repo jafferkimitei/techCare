@@ -14,19 +14,19 @@ export default function PatientsPage() {
   }, [fetchPatients]);
 
   if (loading) {
-    return <div className="p-4 text-gray-500">Loading patients...</div>;
+    return <div className="p-2 sm:p-4 text-gray-500">Loading patients...</div>;
   }
 
   return (
-    <div className="min-h-screen text-gray-900 p-4">
-      <div className="grid grid-cols-[1fr_2fr_1fr] gap-x-6 h-full">
-        <div className="h-full rounded-2xl">
+    <div className="min-h-screen text-gray-900 p-2 sm:p-4">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_2fr_1fr]">
+        <div className=" rounded-xl">
           <PatientsColumn patients={patients} />
         </div>
-        <div className="h-full rounded-2xl">
+        <div className=" rounded-xl">
           <DiagnosisColumn />
         </div>
-        <div className="h-full rounded-2xl">
+        <div className=" rounded-xl md:hidden lg:block">
           <PatientInfoColumn />
         </div>
       </div>
