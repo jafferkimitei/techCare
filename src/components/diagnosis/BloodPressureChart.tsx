@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -15,21 +16,32 @@ import { usePatientStore } from '@/store/usePatientStore';
 import Image from 'next/image';
 import { useState } from 'react';
 
-ChartJS.register(
-  LineElement,
-  PointElement,
-  CategoryScale,
-  LinearScale,
-  Legend,
-  Tooltip,
-  Title
-);
+ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Legend, Tooltip, Title);
 
 const BloodPressureChart = () => {
   const { selectedPatient } = usePatientStore();
   const [filter, setFilter] = useState<'1m' | '6m' | '1y'>('6m');
 
-  if (!selectedPatient || !selectedPatient.bloodPressureHistory) {
+
+  const abbreviateMonth = (monthName: string) => {
+    const monthAbbreviations: { [key: string]: string } = {
+      'January': 'Jan',
+      'February': 'Feb',
+      'March': 'Mar',
+      'April': 'Apr',
+      'May': 'May',
+      'June': 'Jun',
+      'July': 'Jul',
+      'August': 'Aug',
+      'September': 'Sep',
+      'October': 'Oct',
+      'November': 'Nov',
+      'December': 'Dec'
+    };
+    return monthAbbreviations[monthName] || monthName;
+  };
+
+  if (!selectedPatient || !selectedPatient.diagnosis_history) {
     return (
       <p className="text-gray-400 italic text-center w-full">
         No blood pressure data available.
@@ -38,7 +50,7 @@ const BloodPressureChart = () => {
   }
 
   const getFilteredHistory = () => {
-    const history = selectedPatient.bloodPressureHistory;
+    const history = selectedPatient.diagnosis_history;
     if (filter === '1m') return history.slice(-1);
     if (filter === '6m') return history.slice(-6);
     if (filter === '1y') return history.slice(-12);
@@ -46,12 +58,9 @@ const BloodPressureChart = () => {
   };
 
   const history = getFilteredHistory();
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-  const labels = history.map(entry => `${monthNames[entry.month - 1]}, ${entry.year}`);
-  const systolicData = history.map(entry => entry.systolic);
-  const diastolicData = history.map(entry => entry.diastolic);
+  const labels = history.map((entry) => `${abbreviateMonth(entry.month)}, ${entry.year}`);
+  const systolicData = history.map((entry) => entry.blood_pressure.systolic.value);
+  const diastolicData = history.map((entry) => entry.blood_pressure.diastolic.value);
 
   const maxSystolic = Math.max(...systolicData);
   const maxDiastolic = Math.max(...diastolicData);
@@ -86,16 +95,20 @@ const BloodPressureChart = () => {
     },
     scales: {
       y: {
-        beginAtZero: true,
-        suggestedMax: 180,
-        ticks: { stepSize: 20 },
+        min: 60,
+        max: 180,
+        ticks: { 
+          stepSize: 20,
+          callback: function(value: never) {
+            return value;
+          }
+        },
       },
     },
   };
 
   return (
     <div className="w-full h-full flex flex-col">
-      {/* Header: Title + Filter */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-800">Blood Pressure</h2>
         <div className="relative text-sm text-gray-500 cursor-pointer">
@@ -109,27 +122,22 @@ const BloodPressureChart = () => {
             <option value="1y">Last 1 year</option>
           </select>
           <span className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
-          <Image
-                  src="/icons/expand_more_FILL0_wght300_GRAD0_opsz24.svg"
-                  alt="Expand More Icon"
-                  width={14}
-                  height={14}
-                  className="text-gray-300"
-                />
+            <Image
+              src="/icons/expand_more_FILL0_wght300_GRAD0_opsz24.svg"
+              alt="Expand More Icon"
+              width={14}
+              height={14}
+              className="text-gray-300"
+            />
           </span>
         </div>
       </div>
 
-      {/* Chart + Legend */}
       <div className="flex w-full h-full gap-4">
-        {/* Chart */}
         <div className="flex-1 min-w-0 h-full">
           <Line data={data} options={options} />
         </div>
-
-        {/* Side Info Panel */}
         <div className="w-52 flex flex-col text-sm text-gray-700 pl-4">
-          {/* Systolic */}
           <div className="border-b border-gray-200 pb-3 mb-3">
             <div className="flex items-center gap-2 mb-1">
               <div className="w-3 h-3 rounded-full bg-pink-400" />
@@ -149,8 +157,6 @@ const BloodPressureChart = () => {
               </div>
             </div>
           </div>
-
-          {/* Diastolic */}
           <div>
             <div className="flex items-center gap-2 mb-1">
               <div className="w-3 h-3 rounded-full bg-blue-400" />

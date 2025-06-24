@@ -3,9 +3,6 @@
 import { usePatientStore } from '@/store/usePatientStore';
 import Image from 'next/image';
 
-// ────────────────────────────────────────────
-// Reusable info row
-// ────────────────────────────────────────────
 const InfoItem = ({
   iconSrc,
   label,
@@ -43,79 +40,44 @@ const PatientInfoColumn = () => {
     );
   }
 
-  // ── Normalised / formatted fields ───────────────────────────────
-  const contact =
-    typeof selectedPatient.contact === 'object'
-      ? selectedPatient.contact.phone || 'N/A'
-      : selectedPatient.contact;
-
-  const emergency =
-    typeof selectedPatient.emergencyContact === 'object'
-      ? selectedPatient.emergencyContact.phone
-      : selectedPatient.emergencyContact;
-
-  const insurance =
-    typeof selectedPatient.insurance === 'object'
-      ? selectedPatient.insurance.provider
-      : selectedPatient.insurance;
+  const {
+    name,
+    gender,
+    age,
+    profile_picture,
+    date_of_birth,
+    phone_number,
+    emergency_contact,
+    insurance_type,
+  } = selectedPatient;
 
   const genderIcon =
-    selectedPatient.gender === 'Male'
+    gender === 'Male'
       ? '/icons/MaleIcon.png'
-      : selectedPatient.gender === 'Female'
+      : gender === 'Female'
       ? '/icons/FemaleIcon.png'
       : '/icons/gender.svg';
 
-  // ── UI ──────────────────────────────────────────────────────────
   return (
     <aside className="bg-white rounded-xl shadow-sm p-4 h-full flex flex-col gap-6 overflow-y-auto">
-      {/* Avatar + name centred */}
       <div className="flex flex-col items-center text-center">
         <Image
-          src={selectedPatient.photo}
-          alt={selectedPatient.name}
+          src={profile_picture}
+          alt={name}
           width={96}
           height={96}
           className="w-24 h-24 rounded-full object-cover mb-2"
         />
-        <h2 className="text-lg font-semibold">{selectedPatient.name}</h2>
-        <p className="text-sm text-gray-500">
-          ID: #P-{selectedPatient.id.padStart(3, '0')}
-        </p>
+        <h2 className="text-lg font-bold text-[#072635]">{name}</h2>
+        <p className="text-sm text-gray-500">{age} years</p>
       </div>
 
-      {/* Details left-aligned */}
-      <div className="text-sm space-y-4">
-        <InfoItem
-          iconSrc="/icons/BirthIcon.png"
-          label="Date of Birth"
-          value={selectedPatient.dob}
-        />
-        <InfoItem iconSrc={genderIcon} label="Gender" value={selectedPatient.gender} />
-        <InfoItem iconSrc="/icons/PhoneIcon.png" label="Contact Info" value={contact} />
-        <InfoItem
-          iconSrc="/icons/PhoneIcon.png"
-          label="Emergency Contact"
-          value={emergency}
-        />
-        <InfoItem
-          iconSrc="/icons/InsuranceIcon.png"
-          label="Insurance Provider"
-          value={insurance}
-        />
-      </div>
-
-      {/* CTA button centred */}
-      <div className="flex justify-center pt-2">
-        <button
-          className="
-            w-[220px] h-[41px]
-            bg-[#01F0D0] rounded-[41px]
-            text-[#072635] text-[14px] leading-[19px] font-bold
-            hover:brightness-110 transition"
-        >
-          Show All Information
-        </button>
+      <div className="flex flex-col gap-4">
+        <InfoItem iconSrc={genderIcon} label="Gender" value={gender} />
+        <InfoItem iconSrc="/icons/BirthIcon.png" label="DOB" value={date_of_birth} />
+        <InfoItem iconSrc="/icons/PhoneIcon.png" label="Phone Number" value={phone_number} />
+        <InfoItem iconSrc="/icons/PhoneIcon.png" label="Emergency Contact" value={emergency_contact} />
+        <InfoItem iconSrc="/icons/InsuranceIcon.png" label="Insurance Type" value={insurance_type} />
       </div>
     </aside>
   );

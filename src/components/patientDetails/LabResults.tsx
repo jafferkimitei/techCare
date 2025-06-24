@@ -3,7 +3,7 @@
 import { usePatientStore } from '@/store/usePatientStore';
 import Image from 'next/image';
 
-const LabResultsPanel = () => {
+const LabResults = () => {
   const { selectedPatient } = usePatientStore();
 
   if (!selectedPatient) {
@@ -15,29 +15,31 @@ const LabResultsPanel = () => {
     );
   }
 
+  const labResults = selectedPatient.lab_results;
+  console.log('Selected Patient Lab Results:', selectedPatient.lab_results);
   return (
     <section className="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-4 h-full">
       <h3 className="text-lg font-semibold text-[#072635]">Lab Results</h3>
 
       <div className="flex flex-col gap-3 overflow-y-auto max-h-[260px] pr-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-        {selectedPatient.labResults.length === 0 ? (
+        {!Array.isArray(labResults) || labResults.length === 0 ? (
           <p className="text-sm text-gray-500">No lab results available.</p>
         ) : (
-          selectedPatient.labResults.map((result, index) => (
+          labResults.map((result) => (
             <div
-              key={index}
+              key={result}
               className="flex items-center justify-between p-3 rounded-md hover:bg-[#F5F9F8] transition"
             >
               <div className="flex flex-col text-sm">
-                <span className="text-[#072635] font-medium">{result.file}</span>
-                <span className="text-gray-500 text-xs">{result.size}</span>
+                <span className="text-[#072635] font-medium">{result}</span>
+                
               </div>
 
               <a
-                href={`/lab-results/${encodeURIComponent(result.file)}`}
+                href={`/lab-results/${encodeURIComponent(result)}`}
                 download
                 className="ml-4"
-                title={`Download ${result.file}`}
+                title={`Download ${result}`}
               >
                 <Image
                   src="/icons/downloadIcon.png"
@@ -55,4 +57,4 @@ const LabResultsPanel = () => {
   );
 };
 
-export default LabResultsPanel;
+export default LabResults;

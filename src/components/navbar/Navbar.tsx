@@ -39,7 +39,7 @@ const Navbar = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="hidden md:flex justify-center flex-1 min-w-0 gap-4 text-sm font-medium text-[#072635]">
+      <nav className="hidden md:flex justify-center flex-1 min-w-0 gap-2 text-sm font-medium text-[#072635]">
         {navItems.map(({ label, href, icon }) => {
           const isActive = pathname === href;
           return (
@@ -47,10 +47,12 @@ const Navbar = () => {
               key={label}
               href={href}
               className={clsx(
-                "flex items-center gap-1 px-4 py-2 text-[14px] font-bold font-[Manrope] transition-colors duration-200",
+                // Base styles - ensure proper display and positioning
+                "inline-flex items-center gap-2 px-4 py-2.5 text-[14px] font-bold font-[Manrope] transition-all duration-200 whitespace-nowrap",
+                // Active state with full coverage
                 isActive
-                  ? "bg-[#01F0D0] text-[#072635] rounded-[41px]"
-                  : "text-[#072635] hover:text-blue-600"
+                  ? "bg-[#01F0D0] text-[#072635] rounded-[41px] shadow-sm"
+                  : "text-[#072635] hover:text-blue-600 hover:bg-gray-50 rounded-[41px]"
               )}
             >
               <Image
@@ -58,9 +60,9 @@ const Navbar = () => {
                 alt={`${label} icon`}
                 width={16}
                 height={17}
-                className="object-contain"
+                className="object-contain flex-shrink-0"
               />
-              <span>{label}</span>
+              <span className="leading-none">{label}</span>
             </a>
           );
         })}
@@ -83,35 +85,41 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Settings */}
-        <button
-          className="p-2 hover:bg-gray-100 rounded-full transition"
-          title="Settings"
-          aria-label="Settings"
-        >
-          <Image
-            src="/icons/settings_FILL0_wght300_GRAD0_opsz24.svg"
-            alt="Settings icon"
-            width={19}
-            height={20}
-            className="object-contain"
-          />
-        </button>
+        {/* Separator */}
+        <div className="h-10 border-l border-gray-200" />
 
-        {/* More Options */}
-        <button
-          className="p-2 hover:bg-gray-100 rounded-full transition"
-          title="More options"
-          aria-haspopup="true"
-        >
-          <Image
-            src="/icons/more_vert_FILL0_wght300_GRAD0_opsz24.svg"
-            alt="More options icon"
-            width={4}
-            height={18}
-            className="object-contain"
-          />
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2">
+          {/* Settings */}
+          <button
+            className="p-2 hover:bg-gray-100 rounded-full transition"
+            title="Settings"
+            aria-label="Settings"
+          >
+            <Image
+              src="/icons/settings_FILL0_wght300_GRAD0_opsz24.svg"
+              alt="Settings icon"
+              width={19}
+              height={20}
+              className="object-contain"
+            />
+          </button>
+
+          {/* More Options */}
+          <button
+            className="p-2 hover:bg-gray-100 rounded-full transition"
+            title="More options"
+            aria-haspopup="true"
+          >
+            <Image
+              src="/icons/more_vert_FILL0_wght300_GRAD0_opsz24.svg"
+              alt="More options icon"
+              width={4}
+              height={18}
+              className="object-contain"
+            />
+          </button>
+        </div>
       </div>
     </header>
   );

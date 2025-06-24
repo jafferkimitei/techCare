@@ -1,44 +1,47 @@
-'use client'
+'use client';
 
-import { usePatientStore } from '@/store/usePatientStore'
-import VitalCard from './VitalCard'
-import { vitalsConfig } from '../../utils/vitalsConfig'
-import { getVitalStatus } from '../../utils/getVitalStatus'
-import DiagnosisTable from './DiagnosisTable'
+import { usePatientStore } from '@/store/usePatientStore';
+import VitalCard from './VitalCard';
+import { vitalsConfig } from '../../utils/vitalsConfig';
+import { getVitalStatus } from '../../utils/getVitalStatus';
+import DiagnosisTable from './DiagnosisTable';
 import BloodPressureChart from './BloodPressureChart';
 
 const DiagnosisColumn = () => {
-  const { selectedPatient } = usePatientStore()
+  const { selectedPatient } = usePatientStore();
 
   if (!selectedPatient) {
     return (
-      <section className='bg-white rounded-xl shadow-sm flex items-center justify-center'>
-        <p className='text-gray-400 italic'>
-          Select a patient to see diagnosis info
-        </p>
+      <section className="bg-[#f0f0f0] rounded-xl shadow-sm flex items-center justify-center min-h-screen">
+        <p className="text-gray-400 italic">Select a patient to see diagnosis info</p>
       </section>
-    )
+    );
   }
 
-  const { vitals, diagnosis } = selectedPatient
-  const vitalCards = vitalsConfig(vitals)
+  const { diagnosis_history, diagnostic_list } = selectedPatient;
+
+  const latestVitals = diagnosis_history?.[0] ?? {};
+
+  const vitals = {
+    respiratoryRate: latestVitals?.respiratory_rate?.value,
+    temperature: latestVitals?.temperature?.value,
+    heartRate: latestVitals?.heart_rate?.value,
+  };
+
+  const vitalCards = vitalsConfig(vitals);
 
   return (
-    <>
-      <section className='bg-white rounded-xl shadow-sm flex flex-col gap-4 p-4'>
-        <h3 className='font-semibold text-base mb-2'>Diagnosis History</h3>
-        <div className='bg-gray-50 rounded-lg p-4 h-64 flex items-center justify-center'>
-  <BloodPressureChart />
-</div>
+    <div className="space-y-6">
+      <section className="bg-white rounded-xl shadow-sm p-6">
+        <h3 className="font-semibold text-lg text-gray-800 mb-6">Diagnosis History</h3>
+        
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 h-72 mb-6">
+          <BloodPressureChart />
+        </div>
 
-
-        <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 auto-rows-fr'>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {vitalCards.map((vital) => {
-            const { status, statusIcon } = getVitalStatus(
-              vital.value,
-              vital.normalRange
-            )
-
+            const { status, statusIcon } = getVitalStatus(vital.value, vital.normalRange);
             return (
               <VitalCard
                 key={vital.label}
@@ -49,20 +52,17 @@ const DiagnosisColumn = () => {
                 statusIcon={statusIcon}
                 bgColor={vital.bgColor}
               />
-            )
+            );
           })}
         </div>
       </section>
 
-      {/* Diagnosis List Section */}
-      <section className='bg-white rounded-xl shadow-sm flex mt-4 flex-col gap-4 p-4'>
-        <div>
-          <h3 className='font-semibold text-base mb-2'>Diagnosis List</h3>
-          <DiagnosisTable data={diagnosis} />
-        </div>
+      <section className="bg-white rounded-xl shadow-sm p-6">
+        <h3 className="font-semibold text-lg text-gray-800 mb-6">Diagnosis List</h3>
+        <DiagnosisTable data={diagnostic_list} />
       </section>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default DiagnosisColumn
+export default DiagnosisColumn;
