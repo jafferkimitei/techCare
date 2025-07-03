@@ -13,6 +13,7 @@ import { Line } from 'react-chartjs-2';
 import { usePatientStore } from '@/store/usePatientStore';
 import Image from 'next/image';
 import { useState } from 'react';
+import { ChartOptions } from 'chart.js';
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Legend, Tooltip, Title);
 
@@ -84,7 +85,7 @@ const BloodPressureChart = () => {
     ],
   };
 
-  const options = {
+  const options: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -94,18 +95,18 @@ const BloodPressureChart = () => {
       y: {
         min: 60,
         max: 180,
-        ticks: { 
+        ticks: {
           stepSize: 20,
-          callback: function(value: never) {
+          callback: function (value: number | string) {
             return value;
-          }
+          },
         },
       },
       x: {
         ticks: {
           maxTicksLimit: window.innerWidth < 640 ? 3 : 6,
-        }
-      }
+        },
+      },
     },
   };
 
