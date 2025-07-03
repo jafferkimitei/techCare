@@ -3,13 +3,7 @@
 import Image from 'next/image';
 import { usePatientStore } from '@/store/usePatientStore';
 import clsx from 'clsx';
-
-interface Patient {
-  name: string;
-  gender: string;
-  age: number;
-  profile_picture: string;
-}
+import { Patient } from '@/types/patient'; // Import the shared Patient type
 
 interface PatientsColumnProps {
   patients: Patient[];
