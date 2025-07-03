@@ -71,7 +71,7 @@ const Navbar = () => {
           
           <div className="hidden sm:flex items-center gap-2 lg:gap-3">
             <Image
-              src="/patients/dr_jose.png"
+              src="/icons/doc.jpg"
               alt="Dr. Jose"
               width={28}
               height={28}
